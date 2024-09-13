@@ -26,16 +26,14 @@ public class Program {
         } catch (NumberFormatException e) {
             System.out.println(e.getMessage());
         }
-
-
-
     }
 
     private static HikariDataSource getDataSource() {
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl("jdbc:postgresql://localhost:5432/");
-        config.setUsername("lezlieda");
-        config.setPassword("lezlieda");
+        config.setUsername("postgres");
+        config.setPassword("qwe");
         return new HikariDataSource(config);
     }
+
 }

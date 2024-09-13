@@ -15,16 +15,20 @@ import java.util.Optional;
 
 public class MessagesRepositoryJdbcImpl implements MessagesRepository {
     private final DataSource dataSource;
+    private final String SQL_FIND_MESSAGE_BY_ID = "SELECT * FROM messages WHERE id = ?";
+    private final String SQL_FIND_USER_BY_ID = "SELECT * FROM users WHERE id = ?";
+    private final String SQL_FIND_CHATROOM_BY_ID = "SELECT * FROM chatrooms WHERE id = ?";
 
     public MessagesRepositoryJdbcImpl(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
     @Override
-    public Optional<Message> findById(long id) {
+    public Optional<Message> findById(Long id) {
         try {
             Connection connection = dataSource.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM messages WHERE id = " + id);
+            PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_MESSAGE_BY_ID);
+            preparedStatement.setLong(1, id);
             ResultSet result = preparedStatement.executeQuery();
             if (result.next()) {
                 return Optional.of(new Message(id, findUserById(result.getLong(2)), findChatroomById(result.getLong(3)),
@@ -37,9 +41,10 @@ public class MessagesRepositoryJdbcImpl implements MessagesRepository {
     }
 
     @Contract("_ -> new")
-    private @NotNull User findUserById(long id) throws SQLException {
+    private @NotNull User findUserById(Long id) throws SQLException {
         Connection connection = dataSource.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM users WHERE id = " + id);
+        PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_USER_BY_ID);
+        preparedStatement.setLong(1, id);
         ResultSet result = preparedStatement.executeQuery();
         if (result.next())
             return new User(id, result.getString(2), result.getString(3), null, null);
@@ -47,9 +52,10 @@ public class MessagesRepositoryJdbcImpl implements MessagesRepository {
     }
 
     @Contract("_ -> new")
-    private @NotNull Chatroom findChatroomById(long id) throws SQLException {
+    private @NotNull Chatroom findChatroomById(Long id) throws SQLException {
         Connection connection = dataSource.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM chatrooms WHERE id = " + id);
+        PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_CHATROOM_BY_ID);
+        preparedStatement.setLong(1, id);
         ResultSet result = preparedStatement.executeQuery();
         if (result.next())
             return new Chatroom(id, result.getString(2), findUserById(result.getLong(3)), null);
