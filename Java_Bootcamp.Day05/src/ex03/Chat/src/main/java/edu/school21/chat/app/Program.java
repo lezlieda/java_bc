@@ -12,17 +12,16 @@ import java.util.Optional;
 public class Program {
     public static void main(String[] args) {
         MessagesRepository mr = new MessagesRepositoryJdbcImpl(getDataSource());
-        Optional<Message> messageOptional = mr.findById(1);
+        Optional<Message> messageOptional = mr.findById(2L);
         if (messageOptional.isPresent()) {
             Message message = messageOptional.get();
             message.setText("Lorem ipsum dolor sit amet");
             message.setDateTime(LocalDateTime.now());
             mr.update(message);
         }
-        messageOptional = mr.findById(7);
+        messageOptional = mr.findById(3L);
         if (messageOptional.isPresent()) {
             Message message = messageOptional.get();
-            message.setText(null);
             message.setDateTime(LocalDateTime.now());
             message.setAuthor(null);
             mr.update(message);
@@ -32,8 +31,8 @@ public class Program {
     private static HikariDataSource getDataSource() {
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl("jdbc:postgresql://localhost:5432/");
-        config.setUsername("lezlieda");
-        config.setPassword("lezlieda");
+        config.setUsername("postgres");
+        config.setPassword("qwe");
         return new HikariDataSource(config);
     }
 }
