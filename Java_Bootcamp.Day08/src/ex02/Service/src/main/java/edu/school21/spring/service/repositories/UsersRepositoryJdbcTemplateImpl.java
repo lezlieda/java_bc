@@ -21,8 +21,8 @@ public class UsersRepositoryJdbcTemplateImpl implements UsersRepository {
     private final String SQL_FIND_BY_ID = "SELECT * FROM users WHERE id = ?";
     private final String SQL_FIND_BY_EMAIL = "SELECT * FROM users WHERE email = ?";
     private final String SQL_FIND_ALL = "SELECT * FROM users";
-    private final String SQL_SAVE = "INSERT INTO users (email) VALUES (?)";
-    private final String SQL_UPDATE = "UPDATE users SET email = ? WHERE id = ?";
+    private final String SQL_SAVE = "INSERT INTO users (id, email, password) VALUES (?, ?, ?)";
+    private final String SQL_UPDATE = "UPDATE users SET email = ?, password = ? WHERE id = ?";
     private final String SQL_DELETE = "DELETE FROM users WHERE id = ?";
 
 

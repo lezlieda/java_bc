@@ -2,8 +2,6 @@ package edu.school21.chat.app;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import edu.school21.chat.repositories.MessagesRepository;
-import edu.school21.chat.repositories.MessagesRepositoryJdbcImpl;
 import edu.school21.chat.repositories.UsersRepository;
 import edu.school21.chat.repositories.UsersRepositoryJdbcImpl;
 
