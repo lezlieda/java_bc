@@ -31,8 +31,6 @@ public class UsersRepositoryJdbcImpl implements UsersRepository {
         this.dataSource = dataSource;
     }
 
-
-
     @Override
     public Optional<User> findById(Long id) {
         try {

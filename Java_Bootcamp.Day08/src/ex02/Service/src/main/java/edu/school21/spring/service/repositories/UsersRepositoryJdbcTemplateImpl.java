@@ -47,12 +47,12 @@ public class UsersRepositoryJdbcTemplateImpl implements UsersRepository {
 
     @Override
     public void save(User entity) {
-        jdbcTemplate.update(SQL_SAVE, entity.getEmail());
+        jdbcTemplate.update(SQL_SAVE, entity.getId(), entity.getEmail(), entity.getPassword());
     }
 
     @Override
     public void update(User entity) {
-        jdbcTemplate.update(SQL_UPDATE, entity.getEmail(), entity.getId());
+        jdbcTemplate.update(SQL_UPDATE, entity.getEmail(), entity.getPassword(), entity.getId());
     }
 
     @Override
