@@ -9,7 +9,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 public class ClientHandler implements Runnable {
-    private Socket clientSocket;
+    private final Socket clientSocket;
     private final UsersService usersService;
     private final DataOutputStream out;
     private final DataInputStream in;
@@ -50,11 +50,11 @@ public class ClientHandler implements Runnable {
     private boolean signUp() throws IOException {
         out.writeUTF("Enter username:");
         out.flush();
-        String username = in.readUTF().toString();
+        String username = in.readUTF();
         System.out.println(username);
         out.writeUTF("Enter password:");
         out.flush();
-        String password = in.readUTF().toString();
+        String password = in.readUTF();
         System.out.println(password);
         if (usersService.signUp(username, password)) {
             out.writeUTF("Successful!");
