@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 @Qualifier("usersService")
 public class UsersServiceImpl implements UsersService {
@@ -14,22 +16,21 @@ public class UsersServiceImpl implements UsersService {
     private final UsersRepository usersRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public UsersServiceImpl(UsersRepository usersRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public UsersServiceImpl(UsersRepository usersRepository) {
         this.usersRepository = usersRepository;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.bCryptPasswordEncoder = new BCryptPasswordEncoder();
     }
 
 
 
     @Override
     public boolean signUp(String login, String password) {
-        if (usersRepository.findByUsername(login) != null) {
-            throw new IllegalArgumentException("User with this login already exists");
+        if (usersRepository.findByUsername(login).isPresent()) {
+            return false;
         }
         User user = new User();
         user.setUsername(login);
         user.setPassword(bCryptPasswordEncoder.encode(password));
-        usersRepository.save(user);
-        return true;
+        return usersRepository.save(user) > -1;
     }
 }

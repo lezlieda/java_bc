@@ -11,7 +11,7 @@ import java.net.Socket;
 public class ClientHandler implements Runnable {
     private Socket clientSocket;
     private final UsersService usersService;
-    private final PrintWriter out;
+    private final DataOutputStream out;
     private final DataInputStream in;
 
 
@@ -19,7 +19,7 @@ public class ClientHandler implements Runnable {
         this.clientSocket = clientSocket;
         this.usersService = usersService;
         try {
-            out = new PrintWriter(clientSocket.getOutputStream(), true);
+            out = new DataOutputStream(clientSocket.getOutputStream());
             in = new DataInputStream(clientSocket.getInputStream());
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -29,14 +29,16 @@ public class ClientHandler implements Runnable {
     @Override
     public void run() {
         try {
-            out.println("Hello from server!");
+            out.writeUTF("Hello from server!");
+            out.flush();
             String inputLine;
             boolean isExit = false;
-            while ((inputLine = in.readUTF()) != null && !isExit) {
+            while (!isExit) {
+                inputLine = in.readUTF();
                 if ("signUp".equals(inputLine)) {
                     isExit = signUp();
                 } else {
-                    out.println("Unknown command");
+                    out.writeUTF("Unknown command");
                 }
             }
             close();
@@ -46,15 +48,21 @@ public class ClientHandler implements Runnable {
     }
 
     private boolean signUp() throws IOException {
-        out.println("Enter username:");
+        out.writeUTF("Enter username:");
+        out.flush();
         String username = in.readUTF().toString();
-        out.println("Enter password:");
+        System.out.println(username);
+        out.writeUTF("Enter password:");
+        out.flush();
         String password = in.readUTF().toString();
+        System.out.println(password);
         if (usersService.signUp(username, password)) {
-            out.println("Successful!");
+            out.writeUTF("Successful!");
+            out.flush();
             return true;
         } else {
-            out.println("User not created");
+            out.writeUTF("User not created");
+            out.flush();
         }
         return false;
     }

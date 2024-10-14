@@ -61,4 +61,8 @@ public class User {
                 ", password='" + password + '\'' +
                 '}';
     }
+
+    public boolean isEmpty() {
+        return id == null && username == null && password == null;
+    }
 }
