@@ -62,7 +62,4 @@ public class User {
                 '}';
     }
 
-    public boolean isEmpty() {
-        return id == null && username == null && password == null;
-    }
 }

@@ -16,6 +16,7 @@ import java.net.Socket;
 public class Server {
     private final UsersService usersService;
 
+
     @Autowired
     public Server(@Qualifier("usersService") UsersService usersService) {
         this.usersService = usersService;
@@ -25,17 +26,11 @@ public class Server {
         try {
             ServerSocket server = new ServerSocket(port);
             Socket client = server.accept();
-            System.out.print("Connection accepted.");
             DataInputStream in = new DataInputStream(client.getInputStream());
-            System.out.println("DataInputStream created");
             DataOutputStream out = new DataOutputStream(client.getOutputStream());
-            System.out.println("DataOutputStream  created");
             out.writeUTF("Hello from server!");
             out.flush();
-            System.out.println("Server sent message with text: Hello from server!");
-
             while (!client.isClosed()) {
-                System.out.println("Server reading from channel");
                 String entry = in.readUTF();
                 if (entry.equals("signUp")) {
                     signUp(in, out);
@@ -45,19 +40,13 @@ public class Server {
                     out.flush();
                 }
             }
-
-            System.out.println("Client disconnected");
-            System.out.println("Closing connections & channels.");
-
             client.close();
             server.close();
             in.close();
             out.close();
-
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
     }
 
     public void signUp(DataInputStream in, DataOutputStream out) throws IOException {
@@ -75,6 +64,5 @@ public class Server {
             out.flush();
         }
     }
-
 
 }

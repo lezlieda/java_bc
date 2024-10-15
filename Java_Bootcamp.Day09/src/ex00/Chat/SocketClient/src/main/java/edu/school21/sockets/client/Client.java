@@ -2,7 +2,6 @@ package edu.school21.sockets.client;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Scanner;
 
 public class Client {
 
@@ -15,7 +14,6 @@ public class Client {
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
             DataOutputStream out = new DataOutputStream(socket.getOutputStream());
             DataInputStream in = new DataInputStream(socket.getInputStream());
-            System.out.println("Client connected to socket.");
             System.out.println(in.readUTF());
             while (!socket.isClosed()) {
                 if (br.ready()) {
@@ -28,7 +26,6 @@ public class Client {
                         break;
                 }
             }
-            System.out.println("Client disconnected");
             socket.close();
             br.close();
             out.close();

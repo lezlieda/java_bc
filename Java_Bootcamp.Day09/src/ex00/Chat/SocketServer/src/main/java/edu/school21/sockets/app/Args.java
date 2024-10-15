@@ -5,7 +5,7 @@ import com.beust.jcommander.Parameters;
 
 @Parameters(separators = "=")
 public class Args {
-    @Parameter(names = "--port", description = "Port to connect", required = true)
+    @Parameter(names = "--server-port", description = "Port to connect", required = true)
     private int port;
 
     public int getPort() {

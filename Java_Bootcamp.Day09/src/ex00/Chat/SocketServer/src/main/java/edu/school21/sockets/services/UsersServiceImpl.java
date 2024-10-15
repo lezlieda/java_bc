@@ -2,12 +2,10 @@ package edu.school21.sockets.services;
 
 import edu.school21.sockets.models.User;
 import edu.school21.sockets.repositories.UsersRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
 
 @Component
 @Qualifier("usersService")

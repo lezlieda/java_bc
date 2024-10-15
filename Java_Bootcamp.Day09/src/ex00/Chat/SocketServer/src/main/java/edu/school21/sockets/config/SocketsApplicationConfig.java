@@ -3,7 +3,6 @@ package edu.school21.sockets.config;
 import com.zaxxer.hikari.HikariDataSource;
 import edu.school21.sockets.repositories.UsersRepository;
 import edu.school21.sockets.repositories.UsersRepositoryImpl;
-import edu.school21.sockets.server.Server;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
