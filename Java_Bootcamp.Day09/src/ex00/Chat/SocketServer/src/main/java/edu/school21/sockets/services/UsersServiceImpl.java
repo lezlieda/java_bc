@@ -21,8 +21,6 @@ public class UsersServiceImpl implements UsersService {
         this.bCryptPasswordEncoder = new BCryptPasswordEncoder();
     }
 
-
-
     @Override
     public boolean signUp(String login, String password) {
         if (usersRepository.findByUsername(login).isPresent()) {

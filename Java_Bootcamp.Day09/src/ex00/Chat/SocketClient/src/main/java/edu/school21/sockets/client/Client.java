@@ -5,50 +5,39 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class Client {
-    private Socket socket;
-    private final DataOutputStream out;
-    private final DataInputStream in;
-    private final BufferedReader br;
-    public Client(int port) throws IOException {
-        socket = new Socket("localhost", port);
-        br = new BufferedReader(new InputStreamReader(System.in));
-        out = new DataOutputStream(socket.getOutputStream());
-        in = new DataInputStream(socket.getInputStream());
+
+    public Client() {
     }
 
-    public void start() throws IOException {
-        while (!socket.isOutputShutdown()) {
-            if (br.ready()) {
-                String clientCommand = br.readLine();
-                out.writeUTF(clientCommand);
-                out.flush();
-                if (clientCommand.equals("signUp")) {
-                    signUp();
+    public void start(int port) throws IOException {
+        try  {
+            Socket socket = new Socket("localhost", port);
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+            DataInputStream in = new DataInputStream(socket.getInputStream());
+            System.out.println("Client connected to socket.");
+            System.out.println(in.readUTF());
+            while (!socket.isClosed()) {
+                if (br.ready()) {
+                    String clientCommand = br.readLine();
+                    out.writeUTF(clientCommand);
+                    out.flush();
+                    String inMessage = in.readUTF();
+                    System.out.println(inMessage);
+                    if (inMessage.equals("Successful!"))
+                        break;
                 }
             }
+            System.out.println("Client disconnected");
+            socket.close();
+            br.close();
+            out.close();
+            in.close();
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
-
-    public void close() throws IOException {
-        br.close();
-        in.close();
-        out.close();
-        socket.close();
-    }
-
-    public void signUp() throws IOException {
-        System.out.println(in.readUTF());
-        String username = br.readLine();
-        out.writeUTF(username);
-        out.flush();
-        System.out.println(in.readUTF());
-        String password = br.readLine();
-        out.writeUTF(password);
-        out.flush();
-        System.out.println(in.readUTF());
-    }
-
-
 
 
 }

@@ -14,9 +14,8 @@ public class Main {
                 .parse(args);
         arguments.checkArgs();
         try {
-            Client client = new Client(arguments.getPort());
-            client.start();
-            client.close();
+            Client client = new Client();
+            client.start(arguments.getPort());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
