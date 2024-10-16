@@ -1,5 +1,6 @@
 package edu.school21.sockets.server;
 
+import edu.school21.sockets.repositories.MessagesRepository;
 import edu.school21.sockets.services.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -14,11 +15,13 @@ import java.util.concurrent.Executors;
 @Qualifier("server")
 public class Server {
     private final UsersService usersService;
+    private final MessagesRepository messagesRepository;
     static ExecutorService executorService = Executors.newFixedThreadPool(10);
 
     @Autowired
-    public Server(@Qualifier("usersService") UsersService usersService) {
+    public Server(@Qualifier("usersService") UsersService usersService, @Qualifier("messagesRepositoryImpl") MessagesRepository messagesRepository) {
         this.usersService = usersService;
+        this.messagesRepository = messagesRepository;
     }
 
     public void start(int port) {

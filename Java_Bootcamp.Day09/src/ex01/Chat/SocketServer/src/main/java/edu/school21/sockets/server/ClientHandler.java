@@ -26,13 +26,30 @@ public class ClientHandler implements Runnable {
             out.flush();
             while (!client.isClosed()) {
                 String entry = in.readUTF();
-                if (entry.equals("signUp")) {
-                    signUp(in, out);
-                    break;
-                } else {
-                    out.writeUTF("Unknown command");
-                    out.flush();
+                switch (entry) {
+                    case "signUp":
+                        signUp(in, out);
+                        break;
+                    case "signIn":
+                        signIn(in, out);
+                        break;
+                    case "exit":
+                        out.writeUTF("Goodbye!");
+                        out.flush();
+                        client.close();
+                        break;
+                    default:
+                        out.writeUTF("Unknown command");
+                        out.flush();
+                        break;
                 }
+//                if (entry.equals("signUp")) {
+//                    signUp(in, out);
+//                    break;
+//                } else {
+//                    out.writeUTF("Unknown command");
+//                    out.flush();
+//                }
             }
             in.close();
             out.close();
@@ -40,6 +57,9 @@ public class ClientHandler implements Runnable {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void signIn(DataInputStream in, DataOutputStream out) {
     }
 
     public void signUp(DataInputStream in, DataOutputStream out) throws IOException {
