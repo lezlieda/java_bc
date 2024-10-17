@@ -29,7 +29,7 @@ public class Server {
             ServerSocket server = new ServerSocket(port);
             while (!server.isClosed()) {
                 Socket client = server.accept();
-                executorService.execute(new ClientHandler(client, usersService));
+                executorService.execute(new ClientHandler(client, usersService, messagesRepository));
             }
         } catch (Exception e) {
             throw new RuntimeException(e);

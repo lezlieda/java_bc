@@ -29,4 +29,11 @@ public class UsersServiceImpl implements UsersService {
         user.setPassword(bCryptPasswordEncoder.encode(password));
         return usersRepository.save(user) > -1;
     }
+
+    @Override
+    public User signIn(String login, String password) {
+        return usersRepository.findByUsername(login)
+                .filter(user -> bCryptPasswordEncoder.matches(password, user.getPassword()))
+                .orElse(null);
+    }
 }

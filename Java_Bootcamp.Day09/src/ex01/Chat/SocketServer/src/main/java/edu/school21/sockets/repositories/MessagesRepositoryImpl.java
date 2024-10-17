@@ -6,6 +6,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -17,6 +20,9 @@ public class MessagesRepositoryImpl implements MessagesRepository {
     private final String SQL_FIND_BY_ID = "SELECT * FROM \"messages\" WHERE id = ?";
     private final String SQL_SAVE = "INSERT INTO \"messages\" (user_id, message) VALUES (?, ?)";
     private final String SQL_MAX_ID = "SELECT MAX(id) FROM \"messages\"";
+    private final String SQL_FIND_ALL = "SELECT * FROM \"messages\"";
+    private final String SQL_CREATED_AT = "SELECT created_at FROM \"messages\" WHERE id = ?";
+
 
     public MessagesRepositoryImpl(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
@@ -38,12 +44,25 @@ public class MessagesRepositoryImpl implements MessagesRepository {
     @Override
     public long save(Message message) {
         try {
-            if (jdbcTemplate.update(SQL_SAVE, message.getAuthor().getId(), message.getText()) == 1)
-                return jdbcTemplate.queryForObject(SQL_MAX_ID, Long.class);
+            if (jdbcTemplate.update(SQL_SAVE, message.getAuthor().getId(), message.getText()) == 1) {
+                long id = jdbcTemplate.queryForObject(SQL_MAX_ID, Long.class);
+//                LocalDateTime createdAt = jdbcTemplate.queryForObject(SQL_CREATED_AT, LocalDateTime.class, id);
+                Timestamp createdAt = jdbcTemplate.queryForObject(SQL_CREATED_AT, Timestamp.class, id);
+                message.setDateTime(createdAt.toLocalDateTime());
+                message.setId(id);
+                return id;
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
         return -1;
+    }
+
+    @Override
+    public List<Message> findAll() {
+        return jdbcTemplate.query(SQL_FIND_ALL, (resultSet, i) -> {
+            return new Message(resultSet.getLong("id"), null, resultSet.getString("message"), resultSet.getTimestamp("created_at").toLocalDateTime());
+        });
     }
 
 }

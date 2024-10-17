@@ -9,6 +9,14 @@ public class Message {
     private String text;
     private LocalDateTime dateTime;
 
+    public Message() {
+    }
+
+    public Message(User author, String text) {
+        this.author = author;
+        this.text = text;
+    }
+
     public Message(Long id, User author, String text, LocalDateTime dateTime) {
         this.id = id;
         this.author = author;

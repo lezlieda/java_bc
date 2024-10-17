@@ -56,4 +56,11 @@ class MessagesRepositoryImplTest {
         assertEquals("Hello New Message!", messagesRepository.findById(5L).get().getText());
     }
 
+    @ParameterizedTest(name = "findAll")
+    @CsvSource({"0,Hello World!", "1,Hello User!", "2,Hello Guest!", "3,Hello Root!", "4,Hello Superuser!"})
+    void findAll(long id, String text) {
+        assertEquals(5, messagesRepository.findAll().size());
+        assertEquals(text, messagesRepository.findAll().get((int) id).getText());
+    }
+
 }

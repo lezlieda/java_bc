@@ -22,7 +22,7 @@ public class Client {
                     out.flush();
                     String inMessage = in.readUTF();
                     System.out.println(inMessage);
-                    if (inMessage.equals("Successful!"))
+                    if (socket.isClosed())
                         break;
                 }
             }
