@@ -6,6 +6,9 @@ import edu.school21.sockets.server.Server;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 public class Main {
     public static void main(String[] args) {
         Args arguments = new Args();
@@ -16,7 +19,11 @@ public class Main {
         arguments.checkArgs();
         ApplicationContext context = new AnnotationConfigApplicationContext(SocketsApplicationConfig.class);
         Server server = context.getBean("server", Server.class);
-        server.start(arguments.getPort());
+        try {
+            server.start( arguments.getPort(), InetAddress.getByName("localhost"));
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 }
