@@ -19,11 +19,8 @@ public class Main {
         arguments.checkArgs();
         ApplicationContext context = new AnnotationConfigApplicationContext(SocketsApplicationConfig.class);
         Server server = context.getBean("server", Server.class);
-        try {
-            server.start( arguments.getPort(), InetAddress.getByName("localhost"));
-        } catch (UnknownHostException e) {
-            throw new RuntimeException(e);
-        }
+        server.run(arguments.getPort());
+
 
     }
 }

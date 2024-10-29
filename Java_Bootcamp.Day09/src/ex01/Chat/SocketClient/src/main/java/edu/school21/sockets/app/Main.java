@@ -13,12 +13,8 @@ public class Main {
                 .build()
                 .parse(args);
         arguments.checkArgs();
-        try {
-            Client client = new Client();
-            client.start(arguments.getPort());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        Client client = new Client("localhost", arguments.getPort());
+        client.run();
 
     }
 }

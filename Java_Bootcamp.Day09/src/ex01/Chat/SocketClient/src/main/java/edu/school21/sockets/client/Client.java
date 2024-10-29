@@ -1,40 +1,38 @@
 package edu.school21.sockets.client;
 
-import java.io.*;
-import java.net.Socket;
+import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.Channel;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.nio.NioSocketChannel;
+
+import java.io.BufferedReader;
 
 public class Client {
+    private final String host;
+    private int port;
 
-    public Client() {
+    public Client(String host, int port) {
+        this.host = host;
+        this.port = port;
     }
 
-    public void start(int port) throws IOException {
-        try  {
-            Socket socket = new Socket("localhost", port);
-            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-            DataOutputStream out = new DataOutputStream(socket.getOutputStream());
-            DataInputStream in = new DataInputStream(socket.getInputStream());
-            System.out.println(in.readUTF());
-            while (!socket.isClosed()) {
-                if (br.ready()) {
-                    String clientCommand = br.readLine();
-                    out.writeUTF(clientCommand);
-                    out.flush();
-                    String inMessage = in.readUTF();
-                    System.out.println(inMessage);
-                    if (socket.isClosed())
-                        break;
-                }
+    public void run() {
+        EventLoopGroup group = new NioEventLoopGroup();
+        try {
+            Bootstrap bootstrap = new Bootstrap()
+                    .group(group)
+                    .channel(NioSocketChannel.class)
+                    .handler(new ClientInitializer());
+            Channel channel = bootstrap.connect(host, port).sync().channel();
+            BufferedReader in = new BufferedReader(new java.io.InputStreamReader(System.in));
+            while (true) {
+                channel.writeAndFlush(in.readLine() + "\r\n");
             }
-            socket.close();
-            br.close();
-            out.close();
-            in.close();
-
         } catch (Exception e) {
             throw new RuntimeException(e);
+        } finally {
+            group.shutdownGracefully();
         }
     }
-
-
 }
