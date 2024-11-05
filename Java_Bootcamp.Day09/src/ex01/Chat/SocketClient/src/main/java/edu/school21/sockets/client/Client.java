@@ -10,7 +10,7 @@ import java.io.BufferedReader;
 
 public class Client {
     private final String host;
-    private int port;
+    private final int port;
 
     public Client(String host, int port) {
         this.host = host;
