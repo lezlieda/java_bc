@@ -1,14 +1,17 @@
 package edu.school21.sockets.server;
 
+import edu.school21.sockets.models.Message;
 import edu.school21.sockets.repositories.MessagesRepository;
 import edu.school21.sockets.repositories.UsersRepository;
 import edu.school21.sockets.services.UsersService;
+import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
+import io.netty.util.ReferenceCountUtil;
 import io.netty.util.concurrent.GlobalEventExecutor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -43,6 +46,39 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
         logger.info("Client: " + incoming.remoteAddress() + " has joined");
     }
 
+    private void startMenu(ChannelHandlerContext ctx, String str) {
+        Channel incoming = ctx.channel();
+        if (str.equals("Exit")) {
+            closeConnection(ctx);
+        } else if (str.equals("signUp")) {
+            logger.info(str);
+            signUp(ctx, str);
+        } else if (str.equals("signIn")) {
+            logger.info(str);
+            incoming.writeAndFlush("sign In\n");
+        } else {
+            incoming.writeAndFlush("Unknown command!\n");
+        }
+    }
+
+    private void signUp(ChannelHandlerContext ctx, String str) {
+        Channel incoming = ctx.channel();
+        incoming.writeAndFlush("Enter username:\n");
+        ChannelFuture future = incoming.read().closeFuture();
+
+//        incoming.writeAndFlush("Enter password:\n");
+//        String pass = str;
+//        if (usersService.signUp(login, pass)) {
+//            incoming.writeAndFlush("Succsessful!");
+//            closeConnection(ctx);
+//        } else {
+//            incoming.writeAndFlush("Something went wrong!\n");
+//        }
+
+    }
+
+
+
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) {
         Channel incoming = ctx.channel();
@@ -55,34 +91,34 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
-        Channel incoming = ctx.channel();
-        for (Channel channel : channels) {
-            logger.info("Client: " + incoming.remoteAddress() + " sent message: \"" + msg.toString() + "\"");
-            if (channel == incoming) {
-                switch (msg.toString()) {
-                    case "signUp":
-                        signUp(incoming);
-                    case "Exit":
-                        incoming.writeAndFlush("Goodbye\n");
-                        channels.remove(incoming);
-                        break;
-                    default:
-                        incoming.writeAndFlush("Unknown command\n");
-                        break;
-
-                }
-            } else {
-                channel.writeAndFlush("[" + incoming.remoteAddress() + "]: " + msg + "\n");
-            }
+        String in = (String) msg;
+        try {
+            logger.info(in);
+            Channel incoming = ctx.channel();
+            startMenu(ctx, in);
+        } finally {
+            ReferenceCountUtil.release(msg); // (2)
         }
     }
 
+    private void closeConnection(ChannelHandlerContext ctx) {
+        Channel incoming = ctx.channel();
+        incoming.writeAndFlush("Goodbye!\n");
+        channels.remove(incoming);
+        logger.info("Client: " + incoming.remoteAddress() + " was disconnected");
+        ctx.close();
+    }
+
     private void signUp(Channel incoming) {
-        String login, password;
-        incoming.writeAndFlush("Enter login:\n");
-        login = incoming.remoteAddress().toString();
-        incoming.writeAndFlush("Enter password:\n");
-        password = incoming.remoteAddress().toString();
-        logger.info("Client: " + incoming.remoteAddress() + " signed up with login: " + login + " and password: " + password);
+//        String login, password;
+//        ChannelFuture future = incoming.remoteAddress().
+//        incoming.writeAndFlush("Enter login:\n");
+//        login = incoming.remoteAddress().toString();
+//        logger.info("Client: " + incoming.remoteAddress() + " signed up with login: " + login);
+//        incoming.remoteAddress().notify();
+//        System.out.println("login = " + login);
+//        incoming.writeAndFlush("Enter password:\n");
+//        password = incoming.remoteAddress().toString();
+//        logger.info("Client: " + incoming.remoteAddress() + " signed up with login: " + login + " and password: " + password);
     }
 }
