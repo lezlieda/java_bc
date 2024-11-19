@@ -5,6 +5,7 @@ import edu.school21.sockets.repositories.MessagesRepository;
 import edu.school21.sockets.repositories.UsersRepository;
 import edu.school21.sockets.services.UsersService;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
@@ -39,11 +40,18 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
     }
 
     @Override
-    public void handlerAdded(ChannelHandlerContext ctx) {
+    public void channelActive(ChannelHandlerContext ctx) {
         Channel incoming = ctx.channel();
         incoming.writeAndFlush("Hello from server!\n");
-        channels.add(incoming);
-        logger.info("Client: " + incoming.remoteAddress() + " has joined");
+
+    }
+
+    @Override
+    public void handlerAdded(ChannelHandlerContext ctx) {
+//        Channel incoming = ctx.channel();
+////        incoming.writeAndFlush("Hello from server!\n");
+//        channels.add(incoming);
+//        logger.info("Client: " + incoming.remoteAddress() + " has joined");
     }
 
     private void startMenu(ChannelHandlerContext ctx, String str) {
@@ -64,20 +72,9 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
     private void signUp(ChannelHandlerContext ctx, String str) {
         Channel incoming = ctx.channel();
         incoming.writeAndFlush("Enter username:\n");
-        ChannelFuture future = incoming.read().closeFuture();
-
-//        incoming.writeAndFlush("Enter password:\n");
-//        String pass = str;
-//        if (usersService.signUp(login, pass)) {
-//            incoming.writeAndFlush("Succsessful!");
-//            closeConnection(ctx);
-//        } else {
-//            incoming.writeAndFlush("Something went wrong!\n");
-//        }
-
+        ByteBuf buf = incoming.read().alloc().buffer();
+        System.out.println(buf);
     }
-
-
 
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) {
@@ -95,6 +92,8 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
         try {
             logger.info(in);
             Channel incoming = ctx.channel();
+            ByteBuf buf = incoming.alloc().buffer();
+            System.out.println(buf);
             startMenu(ctx, in);
         } finally {
             ReferenceCountUtil.release(msg); // (2)
