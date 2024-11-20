@@ -5,9 +5,10 @@ import io.netty.channel.*;
 
 @ChannelHandler.Sharable
 public class SignUpHandler extends ChannelInboundHandlerAdapter {
+    private final UsersService usersService;
     private String login = null;
     private String password = null;
-    private final UsersService usersService;
+    private final UsersManager usersManager = UsersManager.getInstance();
 
     public SignUpHandler(UsersService usersService) {
         this.usersService = usersService;

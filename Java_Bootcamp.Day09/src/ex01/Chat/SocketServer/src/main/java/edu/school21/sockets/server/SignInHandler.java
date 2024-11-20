@@ -7,10 +7,11 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
 public class SignInHandler extends ChannelInboundHandlerAdapter {
+    private final UsersService usersService;
     private String login = null;
     private String password = null;
-    private final UsersService usersService;
     private final UsersManager usersManager = UsersManager.getInstance();
+
     public SignInHandler(UsersService usersService) {
         this.usersService = usersService;
     }

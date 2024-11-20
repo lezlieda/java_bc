@@ -6,11 +6,9 @@ import io.netty.channel.*;
 @ChannelHandler.Sharable
 public class StartHandler extends ChannelInboundHandlerAdapter {
     private final UsersService usersService;
-    private final  UsersManager usersManager;
 
-    public StartHandler(UsersService usersService, UsersManager usersManager) {
+    public StartHandler(UsersService usersService) {
         this.usersService = usersService;
-        this.usersManager = usersManager;
     }
 
     @Override

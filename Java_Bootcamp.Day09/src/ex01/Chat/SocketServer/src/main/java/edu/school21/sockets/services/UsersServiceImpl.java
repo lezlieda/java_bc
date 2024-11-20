@@ -7,8 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 
-@Component
-@Qualifier("usersService")
+@Component("usersService")
 public class UsersServiceImpl implements UsersService {
 
     private final UsersRepository usersRepository;

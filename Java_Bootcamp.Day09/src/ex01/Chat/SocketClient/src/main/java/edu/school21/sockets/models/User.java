@@ -3,7 +3,7 @@ package edu.school21.sockets.models;
 import java.util.Objects;
 
 public class User {
-    private Long id = -1L;
+    private Long id;
     private String username;
     private String password;
 

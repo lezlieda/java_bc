@@ -46,7 +46,6 @@ public class MessagesRepositoryImpl implements MessagesRepository {
         try {
             if (jdbcTemplate.update(SQL_SAVE, message.getAuthor().getId(), message.getText()) == 1) {
                 long id = jdbcTemplate.queryForObject(SQL_MAX_ID, Long.class);
-//                LocalDateTime createdAt = jdbcTemplate.queryForObject(SQL_CREATED_AT, LocalDateTime.class, id);
                 Timestamp createdAt = jdbcTemplate.queryForObject(SQL_CREATED_AT, Timestamp.class, id);
                 message.setDateTime(createdAt.toLocalDateTime());
                 message.setId(id);

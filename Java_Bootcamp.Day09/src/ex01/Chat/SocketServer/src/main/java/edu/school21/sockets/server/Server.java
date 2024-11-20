@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class Server {
     private final UsersService usersService;
     private final MessagesRepository messagesRepository;
-    private UsersManager usersManager;
+
     public Server(UsersService usersService, MessagesRepository messagesRepository) {
         this.usersService = usersService;
         this.messagesRepository = messagesRepository;
@@ -28,7 +28,7 @@ public class Server {
             ServerBootstrap bootstrap = new ServerBootstrap()
                     .group(bossGroup, workerGroup)
                     .channel(io.netty.channel.socket.nio.NioServerSocketChannel.class)
-                    .childHandler(new ServerInitializer(usersService, usersManager, messagesRepository));
+                    .childHandler(new ServerInitializer(messagesRepository, usersService));
             bootstrap.bind(port).sync().channel().closeFuture().sync();
 
         } catch (Exception e) {
