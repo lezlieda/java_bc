@@ -1,6 +1,5 @@
 package edu.school21.sockets.server;
 
-import edu.school21.sockets.repositories.MessagesRepository;
 import edu.school21.sockets.services.UsersService;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
@@ -15,12 +14,11 @@ public class ServerInitializer extends ChannelInitializer<SocketChannel> {
     @Qualifier("usersService")
     private final UsersService usersService;
 
-    @Qualifier("messagesRepository")
-    private final MessagesRepository messagesRepository;
+    private final UsersManager usersManager;
 
-    public ServerInitializer(UsersService usersService, MessagesRepository messagesRepository) {
+    public ServerInitializer(UsersService usersService, UsersManager usersManager) {
         this.usersService = usersService;
-        this.messagesRepository = messagesRepository;
+        this.usersManager = usersManager;
     }
     @Override
     protected void initChannel(SocketChannel socketChannel) throws Exception {
@@ -28,7 +26,7 @@ public class ServerInitializer extends ChannelInitializer<SocketChannel> {
         pipeline.addLast("framer", new DelimiterBasedFrameDecoder(8192, Delimiters.lineDelimiter()));
         pipeline.addLast("decoder", new StringDecoder());
         pipeline.addLast("encoder", new StringEncoder());
-        pipeline.addLast("handler", new StartHandler(usersService));
+        pipeline.addLast("handler", new StartHandler(usersService, usersManager));
 
     }
 }

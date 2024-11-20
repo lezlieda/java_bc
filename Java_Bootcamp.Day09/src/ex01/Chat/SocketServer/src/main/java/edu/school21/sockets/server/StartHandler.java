@@ -6,9 +6,11 @@ import io.netty.channel.*;
 @ChannelHandler.Sharable
 public class StartHandler extends ChannelInboundHandlerAdapter {
     private final UsersService usersService;
+    private final  UsersManager usersManager;
 
-    public StartHandler(UsersService usersService) {
+    public StartHandler(UsersService usersService, UsersManager usersManager) {
         this.usersService = usersService;
+        this.usersManager = usersManager;
     }
 
     @Override
@@ -19,18 +21,35 @@ public class StartHandler extends ChannelInboundHandlerAdapter {
     }
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws InterruptedException {
+    public void channelRead(ChannelHandlerContext ctx, Object msg) {
         String in = (String) msg;
         System.out.println("Client sent: " + in);
         Channel incoming = ctx.channel();
-        if (!in.equals("signUp")) {
-            incoming.writeAndFlush("Unknown command!\n");
-        } else {
-            incoming.writeAndFlush("Enter login:\n");
-            ctx.pipeline().addLast(new SignUpHandler(usersService));
-            ctx.pipeline().remove(this);
-
+        switch (in) {
+            case "signUp":
+                incoming.writeAndFlush("Enter login:\n");
+                ctx.pipeline().addLast(new SignUpHandler(usersService));
+                ctx.pipeline().remove(this);
+                break;
+            case "signIn":
+                incoming.writeAndFlush("Enter login:\n");
+                ctx.pipeline().addLast(new SignInHandler(usersService));
+                ctx.pipeline().remove(this);
+                break;
+            case "Exit":
+                incoming.writeAndFlush("Goodbye!\n");
+                ctx.close();
+                break;
+            default:
+                incoming.writeAndFlush("Unknown command!\n");
+                break;
         }
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        cause.printStackTrace();
+        ctx.fireExceptionCaught(cause);
     }
 
 

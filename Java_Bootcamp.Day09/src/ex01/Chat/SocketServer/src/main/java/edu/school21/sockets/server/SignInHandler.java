@@ -1,15 +1,17 @@
 package edu.school21.sockets.server;
 
+import edu.school21.sockets.models.User;
 import edu.school21.sockets.services.UsersService;
-import io.netty.channel.*;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
 
-@ChannelHandler.Sharable
-public class SignUpHandler extends ChannelInboundHandlerAdapter {
+public class SignInHandler extends ChannelInboundHandlerAdapter {
     private String login = null;
     private String password = null;
     private final UsersService usersService;
-
-    public SignUpHandler(UsersService usersService) {
+    private final UsersManager usersManager = UsersManager.getInstance();
+    public SignInHandler(UsersService usersService) {
         this.usersService = usersService;
     }
 
@@ -21,13 +23,19 @@ public class SignUpHandler extends ChannelInboundHandlerAdapter {
             login = (String) msg;
         } else if (login != null && password == null) {
             password = (String) msg;
-            if (usersService.signUp(login, password)) {
+            User user = usersService.signIn(login, password);
+            if (user != null) {
+                if (usersManager.isUserLoggedIn(user)) {
+                    incoming.writeAndFlush("User already logged in!!\n");
+                    ctx.close();
+                }
                 incoming.writeAndFlush("Success!\n");
-                ctx.close();
+                usersManager.logIn(incoming, user);
+                ctx.pipeline().addLast(new MessagingHandler(usersManager));
+                ctx.pipeline().remove(this);
             } else {
-                incoming.writeAndFlush("Something went wrong!!\nEnter login:\n");
-                login = null;
-                password = null;
+                incoming.writeAndFlush("Incorrect login/password!\n");
+                ctx.close();
             }
         }
     }
@@ -37,4 +45,6 @@ public class SignUpHandler extends ChannelInboundHandlerAdapter {
         cause.printStackTrace();
         ctx.fireExceptionCaught(cause);
     }
+
+
 }
