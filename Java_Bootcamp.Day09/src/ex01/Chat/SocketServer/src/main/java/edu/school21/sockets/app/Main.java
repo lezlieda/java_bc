@@ -2,7 +2,7 @@ package edu.school21.sockets.app;
 
 import com.beust.jcommander.JCommander;
 import edu.school21.sockets.config.SocketsApplicationConfig;
-import edu.school21.sockets.server.Server;
+import edu.school21.sockets.bootstrap.Server;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -17,7 +17,5 @@ public class Main {
         ApplicationContext context = new AnnotationConfigApplicationContext(SocketsApplicationConfig.class);
         Server server = context.getBean("server", Server.class);
         server.run(arguments.getPort());
-
-
     }
 }

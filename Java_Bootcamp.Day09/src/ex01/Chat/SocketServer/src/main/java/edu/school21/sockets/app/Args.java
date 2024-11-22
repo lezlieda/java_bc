@@ -17,5 +17,4 @@ public class Args {
             throw new IllegalArgumentException("Port must be in range 0-65535");
         }
     }
-
 }

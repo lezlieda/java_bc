@@ -2,14 +2,12 @@ package edu.school21.sockets.services;
 
 import edu.school21.sockets.models.User;
 import edu.school21.sockets.repositories.UsersRepository;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 
 @Component("usersService")
 public class UsersServiceImpl implements UsersService {
-
     private final UsersRepository usersRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 

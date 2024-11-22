@@ -7,22 +7,18 @@ import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @Component
 @Qualifier("messagesRepositoryImpl")
 public class MessagesRepositoryImpl implements MessagesRepository {
-
     JdbcTemplate jdbcTemplate;
-
     private final String SQL_FIND_BY_ID = "SELECT * FROM \"messages\" WHERE id = ?";
     private final String SQL_SAVE = "INSERT INTO \"messages\" (user_id, message) VALUES (?, ?)";
     private final String SQL_MAX_ID = "SELECT MAX(id) FROM \"messages\"";
     private final String SQL_FIND_ALL = "SELECT * FROM \"messages\"";
     private final String SQL_CREATED_AT = "SELECT created_at FROM \"messages\" WHERE id = ?";
-
 
     public MessagesRepositoryImpl(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
@@ -37,7 +33,6 @@ public class MessagesRepositoryImpl implements MessagesRepository {
             });
         } catch (org.springframework.dao.EmptyResultDataAccessException e) {
             return Optional.empty();
-
         }
     }
 
@@ -59,9 +54,6 @@ public class MessagesRepositoryImpl implements MessagesRepository {
 
     @Override
     public List<Message> findAll() {
-        return jdbcTemplate.query(SQL_FIND_ALL, (resultSet, i) -> {
-            return new Message(resultSet.getLong("id"), null, resultSet.getString("message"), resultSet.getTimestamp("created_at").toLocalDateTime());
-        });
+        return jdbcTemplate.query(SQL_FIND_ALL, (resultSet, i) -> new Message(resultSet.getLong("id"), null, resultSet.getString("message"), resultSet.getTimestamp("created_at").toLocalDateTime()));
     }
-
 }

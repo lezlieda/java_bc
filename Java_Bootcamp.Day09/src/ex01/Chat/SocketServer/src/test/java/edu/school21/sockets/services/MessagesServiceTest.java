@@ -1,5 +1,9 @@
 package edu.school21.sockets.services;
 
+import edu.school21.sockets.models.Message;
+import edu.school21.sockets.models.User;
+import edu.school21.sockets.repositories.MessagesRepository;
+import edu.school21.sockets.repositories.MessagesRepositoryImpl;
 import edu.school21.sockets.repositories.UsersRepository;
 import edu.school21.sockets.repositories.UsersRepositoryImpl;
 import org.junit.jupiter.api.AfterEach;
@@ -11,14 +15,11 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-
 import static org.junit.jupiter.api.Assertions.*;
 
-class UsersServiceTest {
+class MessagesServiceTest {
     private EmbeddedDatabase db;
+    private MessagesRepository messagesRepository;
     private UsersRepository usersRepository;
 
     @BeforeEach
@@ -30,6 +31,7 @@ class UsersServiceTest {
                 .addScript("data.sql")
                 .build();
         usersRepository = new UsersRepositoryImpl(db);
+        messagesRepository = new MessagesRepositoryImpl(db);
     }
 
     @AfterEach
@@ -46,31 +48,11 @@ class UsersServiceTest {
         }
     }
 
-    @ParameterizedTest(name = "testSignUpSuccess")
-    @CsvSource({"test1,password1", "test2,password2", "test3,password3"})
-    void testSignUpSuccess(String login, String password) {
-        UsersService usersService = new UsersServiceImpl(usersRepository);
-        assertTrue(usersService.signUp(login, password));
-        assertNotNull(usersRepository.findByUsername(login));
-    }
-
-    @ParameterizedTest(name = "testSignUpFail")
-    @CsvSource({"admin,admin", "user,user", "guest,guest"})
-    void testSignUpFail(String login, String password) {
-        UsersService usersService = new UsersServiceImpl(usersRepository);
-        assertFalse(usersService.signUp(login, password));
-    }
-
-    @Test
-    void testDbConf() {
-        try {
-            String SQL_FIND_ALL = "SELECT * FROM \"users\"";
-            Connection connection = db.getConnection();
-            PreparedStatement statement = connection.prepareStatement(SQL_FIND_ALL);
-            assertNotNull(statement.executeQuery());
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    @ParameterizedTest(name = "testSendMessageSuccess")
+    @CsvSource({"admin,admin message", "user,user message"})
+    void testSendMessageSuccess(String username, String message) {
+        MessagesService messagesService = new MessagesServiceImpl(messagesRepository);
+        assertTrue(messagesService.saveMessage(new Message(new User(), message)));
     }
 
 }

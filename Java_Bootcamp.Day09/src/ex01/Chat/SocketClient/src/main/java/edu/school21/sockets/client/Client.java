@@ -1,6 +1,5 @@
 package edu.school21.sockets.client;
 
-import edu.school21.sockets.models.User;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.EventLoopGroup;
@@ -21,10 +20,7 @@ public class Client {
     public void run() {
         EventLoopGroup group = new NioEventLoopGroup();
         try {
-            Bootstrap bootstrap = new Bootstrap()
-                    .group(group)
-                    .channel(NioSocketChannel.class)
-                    .handler(new ClientInitializer());
+            Bootstrap bootstrap = new Bootstrap().group(group).channel(NioSocketChannel.class).handler(new ClientInitializer());
             Channel channel = bootstrap.connect(host, port).sync().channel();
             BufferedReader in = new BufferedReader(new java.io.InputStreamReader(System.in));
             while (channel.isActive()) {
