@@ -19,6 +19,8 @@ public class MessagesRepositoryImpl implements MessagesRepository {
     private final String SQL_MAX_ID = "SELECT MAX(id) FROM \"messages\"";
     private final String SQL_FIND_ALL = "SELECT * FROM \"messages\"";
     private final String SQL_CREATED_AT = "SELECT created_at FROM \"messages\" WHERE id = ?";
+    private final String SQL_UPDATE = "UPDATE \"messages\" SET user_id =?, message =? WHERE id =?";
+    private final String SQL_DELETE = "DELETE FROM \"messages\" WHERE id =?";
 
     public MessagesRepositoryImpl(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
@@ -50,6 +52,16 @@ public class MessagesRepositoryImpl implements MessagesRepository {
             throw new RuntimeException(e);
         }
         return -1;
+    }
+
+    @Override
+    public void update(Message entity) {
+        jdbcTemplate.update(SQL_UPDATE, entity.getAuthor().getId(), entity.getText(), entity.getId());
+    }
+
+    @Override
+    public void delete(Long id) {
+        jdbcTemplate.update(SQL_DELETE, id);
     }
 
     @Override
