@@ -18,6 +18,6 @@ public class MessagesServiceImpl implements MessagesService {
 
     @Override
     public boolean saveMessage(Message message) {
-        return messagesRepository.save(message) != null;
+        return messagesRepository.save(message) > 0;
     }
 }

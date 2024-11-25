@@ -6,7 +6,7 @@ VALUES ('admin', 'admin'),
          ('superuser', 'superuser');
 
 INSERT INTO "messages" (user_id, message)
-VALUES (0, 'Hello World!'),
+VALUES (1, 'Hello World!'),
          (1, 'Hello User!'),
          (2, 'Hello Guest!'),
          (3, 'Hello Root!'),

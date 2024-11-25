@@ -21,14 +21,19 @@ public class SignUpHandler extends ChannelInboundHandlerAdapter {
         } else if (login != null && password == null) {
             password = (String) msg;
             if (usersManager.signUp(login, password)) {
-                incoming.writeAndFlush("Success!\n");
-                logger.info("User " + incoming.remoteAddress() + " signed up successfully as " + login);
-                ctx.close();
-            } else {
-                incoming.writeAndFlush("Something went wrong!!\nEnter login:");
-                logger.info("User " + incoming.remoteAddress() + "is already signed in.");
                 login = null;
                 password = null;
+                incoming.writeAndFlush("Success!\n1. signIn\n2. signUp\n3. Exit\n");
+                logger.info("Client: " + incoming.remoteAddress() + " signed up successfully as " + login);
+                ctx.pipeline().addLast(new StartHandler());
+                ctx.pipeline().remove(this);
+            } else {
+                incoming.writeAndFlush("Something went wrong!!\n1. signIn\n2. signUp\n3. Exit\n");
+                logger.info("Client: " + incoming.remoteAddress() + " had a problem signing up.");
+                login = null;
+                password = null;
+                ctx.pipeline().addLast(new StartHandler());
+                ctx.pipeline().remove(this);
             }
         }
     }

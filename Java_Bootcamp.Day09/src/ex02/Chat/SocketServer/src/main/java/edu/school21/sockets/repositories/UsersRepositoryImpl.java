@@ -35,7 +35,6 @@ public class UsersRepositoryImpl implements UsersRepository {
         } catch (org.springframework.dao.EmptyResultDataAccessException e) {
             return Optional.empty();
         }
-
     }
 
     @Override
