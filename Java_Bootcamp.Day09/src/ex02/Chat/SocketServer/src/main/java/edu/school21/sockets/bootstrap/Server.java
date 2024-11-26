@@ -7,8 +7,6 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-
 @Component
 @Qualifier("server")
 public class Server {

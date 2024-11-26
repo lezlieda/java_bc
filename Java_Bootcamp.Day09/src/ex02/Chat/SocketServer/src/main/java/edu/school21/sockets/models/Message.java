@@ -84,14 +84,4 @@ public class Message {
       return author.getUsername() + ": " + text;
    }
 
-//   @Override
-//   public String toString() {
-//      return "Message{" +
-//              "id=" + id +
-//              ", author=" + author +
-//              ", chatroom=" + chatroom +
-//              ", text='" + text + '\'' +
-//              ", dateTime=" + dateTime +
-//              '}';
-//   }
 }

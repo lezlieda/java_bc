@@ -11,8 +11,6 @@ import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
-import java.util.List;
-
 @ChannelHandler.Sharable
 public class SignInHandler extends ChannelInboundHandlerAdapter {
     private String login = null;
@@ -34,16 +32,16 @@ public class SignInHandler extends ChannelInboundHandlerAdapter {
             User user = usersManager.signIn(login, password);
             if (user != null) {
                 if (usersManager.isUserLoggedIn(user)) {
-                    incoming.writeAndFlush("User already logged in!!\n");
+                    incoming.writeAndFlush("User already logged in!!\n1. signIn\n2. signUp\n3. Exit\n");
                     logger.info("Client: " + incoming.remoteAddress() + " tried to sign in but is already logged in. Disconnecting.");
-                    ctx.close();
+                    ctx.pipeline().addLast(new StartHandler());
                 } else {
                     incoming.writeAndFlush("Success!\n");
                     logger.info("Client: " + incoming.remoteAddress() + " signed in successfully as " + user);
                     usersManager.logIn(incoming, user);
                     Long lastRoomId = chatroomsManager.lastRoomVisited(user);
                     if (lastRoomId!= null) {
-                        incoming.writeAndFlush("\t---\tHistory from last visited room: " + chatroomsManager.getChatroomById(lastRoomId).getName() + "\t---\n");
+                        incoming.writeAndFlush("\t---\tLast 30 messages from the last visited room: " + chatroomsManager.getChatroomById(lastRoomId).getName() + "\t---\n");
                         for (Message message : messagesManager.getLast30Messages(lastRoomId)) {
                             incoming.writeAndFlush(message + "\n");
                         }
@@ -51,17 +49,15 @@ public class SignInHandler extends ChannelInboundHandlerAdapter {
                     }
                     incoming.writeAndFlush("1. Create room\n2. Choose room\n3. Exit\n");
                     ctx.pipeline().addLast(new MenuHandler());
-                    ctx.pipeline().remove(this);
                 }
             } else {
                 incoming.writeAndFlush("Incorrect login/password!\n1. signIn\n2. signUp\n3. Exit\n");
-                login = null;
-                password = null;
                 logger.info("Client: " + incoming.remoteAddress() + " tried to sign in but failed.");
                 ctx.pipeline().addLast(new StartHandler());
-                ctx.pipeline().remove(this);
-
             }
+            login = null;
+            password = null;
+            ctx.pipeline().remove(this);
         }
     }
 
