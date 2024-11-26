@@ -4,7 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public final class SocketLogger {
-    private final Logger logger = LogManager.getLogger(SocketLogger.class);;
+    private final Logger logger = LogManager.getLogger(SocketLogger.class);
     private static SocketLogger instance = null;
 
     public static SocketLogger getInstance() {

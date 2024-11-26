@@ -59,9 +59,7 @@ public class UsersManager {
 
     public ChannelGroup getAllChannels() {
         ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-        loggedInUsers.forEach((channel, user) -> {
-                channels.add(channel);
-        });
+        loggedInUsers.forEach((channel, user) -> channels.add(channel));
         return channels;
     }
 

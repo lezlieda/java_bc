@@ -5,6 +5,8 @@ import edu.school21.sockets.services.MessagesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component("messagesManager")
 public class MessagesManager {
     @Autowired
@@ -20,6 +22,10 @@ public class MessagesManager {
 
     public void sendMessage(Message message) {
         messagesService.saveMessage(message);
+    }
+
+    public List<Message> getLast30Messages(Long chatroomId) {
+        return messagesService.getLast30Messages(chatroomId);
     }
 
 }

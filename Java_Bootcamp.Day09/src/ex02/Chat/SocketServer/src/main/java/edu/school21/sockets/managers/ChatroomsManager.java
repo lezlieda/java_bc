@@ -16,7 +16,8 @@ public class ChatroomsManager {
     @Autowired
     private ChatroomsService chatroomsService;
     private static ChatroomsManager instance = null;
-    private final Map<Long, Long> chatroomUserRoomMap = new ConcurrentHashMap<>();
+    private final Map<Long, Long> chatroomUserRoomMapOnline = new ConcurrentHashMap<>();
+    private final Map<Long, Long> chatroomUserRoomMapArchived = new ConcurrentHashMap<>();
 
 
     public static ChatroomsManager getInstance() {
@@ -27,15 +28,20 @@ public class ChatroomsManager {
     }
 
     public void enterChatroom(User user, Chatroom chatroom) {
-        chatroomUserRoomMap.put(user.getId(), chatroom.getId());
+        chatroomUserRoomMapOnline.put(user.getId(), chatroom.getId());
+        chatroomUserRoomMapArchived.put(user.getId(), chatroom.getId());
+    }
+
+    public Long lastRoomVisited(User user) {
+        return chatroomUserRoomMapArchived.get(user.getId());
     }
 
     public void leaveChatroom(User user) {
-        chatroomUserRoomMap.remove(user.getId());
+        chatroomUserRoomMapOnline.remove(user.getId());
     }
 
     public Long getChatroomIdByUserId(Long userId) {
-        return chatroomUserRoomMap.get(userId);
+        return chatroomUserRoomMapOnline.get(userId);
     }
 
     public boolean createChatroom(String name, User owner) {
@@ -56,7 +62,7 @@ public class ChatroomsManager {
 
     public List<Long> getUsersInChatroom(Long chatroomId) {
         List<Long> usersInChatroom = new ArrayList<>();
-        chatroomUserRoomMap.forEach((userId, roomId) -> {
+        chatroomUserRoomMapOnline.forEach((userId, roomId) -> {
             if (roomId.equals(chatroomId)) {
                 usersInChatroom.add(userId);
             }

@@ -70,4 +70,14 @@ class MessagesRepositoryImplTest {
         assertEquals(text, messagesRepository.findAll().get((int) id).getText());
     }
 
+    @Test
+    void getLast30Messages() {
+        assertEquals(5, messagesRepository.getLast30Messages(1L).size());
+        assertEquals("Hello World!", messagesRepository.getLast30Messages(1L).get(0).getText());
+        assertEquals("Hello User!", messagesRepository.getLast30Messages(1L).get(1).getText());
+        assertEquals("Wuzup?", messagesRepository.getLast30Messages(1L).get(2).getText());
+        assertEquals("Not really", messagesRepository.getLast30Messages(1L).get(3).getText());
+        assertEquals("ORLY?", messagesRepository.getLast30Messages(1L).get(4).getText());
+    }
+
 }

@@ -3,12 +3,13 @@ package edu.school21.sockets.handlers;
 import edu.school21.sockets.managers.ChatroomsManager;
 import edu.school21.sockets.managers.UsersManager;
 import edu.school21.sockets.models.Chatroom;
-import edu.school21.sockets.models.User;
 import edu.school21.sockets.utils.SocketLogger;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+
+import java.io.IOException;
 
 @ChannelHandler.Sharable
 public class MenuHandler extends ChannelInboundHandlerAdapter {
@@ -83,8 +84,13 @@ public class MenuHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+        if (cause instanceof IOException) {
+            logger.info("Client: " + ctx.channel().remoteAddress() + " has left due to an IOException.");
+            usersManager.logOut(ctx.channel());
+        }
         cause.printStackTrace();
         ctx.fireExceptionCaught(cause);
+        ctx.close();
     }
 
 }

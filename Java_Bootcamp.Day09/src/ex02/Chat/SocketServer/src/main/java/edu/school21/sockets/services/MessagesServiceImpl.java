@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component("messagesService")
 public class MessagesServiceImpl implements MessagesService {
     @Autowired
@@ -19,5 +21,10 @@ public class MessagesServiceImpl implements MessagesService {
     @Override
     public boolean saveMessage(Message message) {
         return messagesRepository.save(message) > 0;
+    }
+
+    @Override
+    public List<Message> getLast30Messages(Long chatroomId) {
+        return messagesRepository.getLast30Messages(chatroomId);
     }
 }

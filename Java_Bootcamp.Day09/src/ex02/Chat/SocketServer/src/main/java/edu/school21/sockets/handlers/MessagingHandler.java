@@ -13,6 +13,8 @@ import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.util.concurrent.GlobalEventExecutor;
 
+import java.io.IOException;
+
 @ChannelHandler.Sharable
 public class MessagingHandler extends ChannelInboundHandlerAdapter {
     private final UsersManager usersManager = UsersManager.getInstance();
@@ -56,8 +58,14 @@ public class MessagingHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+        if (cause instanceof IOException) {
+            logger.info("Client: " + ctx.channel().remoteAddress() + " has left due to an IOException.");
+            chatroomsManager.leaveChatroom(usersManager.getUser(ctx.channel()));
+            usersManager.logOut(ctx.channel());
+        }
         cause.printStackTrace();
         ctx.fireExceptionCaught(cause);
+        ctx.close();
     }
 
 }

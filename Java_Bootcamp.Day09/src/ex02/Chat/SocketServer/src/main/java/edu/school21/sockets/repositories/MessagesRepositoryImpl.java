@@ -41,6 +41,7 @@ public class MessagesRepositoryImpl implements MessagesRepository {
     private final String SQL_CREATED_AT = "SELECT created_at FROM \"messages\" WHERE id = ?";
     private final String SQL_UPDATE = "UPDATE \"messages\" SET user_id =?, message =? WHERE id =?";
     private final String SQL_DELETE = "DELETE FROM \"messages\" WHERE id =?";
+    private final String SQL_LAST_30_MESSAGES = "SELECT m.id, m.message, m.user_id, u.username, m.created_at FROM \"messages\" m JOIN \"users\" u ON m.user_id = u.id WHERE chatroom_id = ? ORDER BY created_at LIMIT 30";
 
     public MessagesRepositoryImpl(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
@@ -88,6 +89,11 @@ public class MessagesRepositoryImpl implements MessagesRepository {
     @Override
     public List<Message> findAll() {
         return jdbcTemplate.query(SQL_FIND_ALL, (resultSet, i) -> new Message(resultSet.getLong("id"), null, null, resultSet.getString("message"), resultSet.getTimestamp("created_at").toLocalDateTime()));
+    }
+
+    @Override
+    public List<Message> getLast30Messages(Long chatroomId) {
+        return jdbcTemplate.query(SQL_LAST_30_MESSAGES, new Object[]{chatroomId}, (resultSet, i) -> new Message(resultSet.getLong("id"), new User(resultSet.getLong("user_id"), resultSet.getString("username"), null), null, resultSet.getString("message"), resultSet.getTimestamp("created_at").toLocalDateTime()));
     }
 
 
