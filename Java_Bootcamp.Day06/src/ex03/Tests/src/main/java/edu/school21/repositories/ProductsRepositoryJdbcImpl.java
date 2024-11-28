@@ -43,7 +43,6 @@ public class ProductsRepositoryJdbcImpl {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM products WHERE id = ?");
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
-            connection = dataSource.getConnection();
             if (resultSet.next()) {
                 Product product = new Product();
                 product.setId(resultSet.getLong("id"));

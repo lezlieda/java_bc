@@ -7,9 +7,11 @@ import edu.school21.repositories.UsersRepository;
 
 public class UsersServiceImpl {
     private final UsersRepository usersRepository;
+
     public UsersServiceImpl(UsersRepository usersRepository) {
         this.usersRepository = usersRepository;
     }
+
     public boolean authenticate(String login, String password) throws AlreadyAuthenticatedException, EntityNotFoundException {
         if (usersRepository.findByLogin(login).getStatus())
             throw new AlreadyAuthenticatedException("User: " + login + ", already logged in!");

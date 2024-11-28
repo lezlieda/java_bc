@@ -12,8 +12,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class EmbeddedDataSourceTest {
     final List<Product> EXPECTED_FIND_ALL_PRODUCTS;
@@ -95,7 +94,7 @@ public class EmbeddedDataSourceTest {
         List<Product> products = productsRepositoryJdbc.findAll();
         Product product = productsRepositoryJdbc.findById(0L).orElse(null);
         assertEquals(9, products.size());
-        assertEquals(null, product);
+        assertNull(product);
     }
 
 

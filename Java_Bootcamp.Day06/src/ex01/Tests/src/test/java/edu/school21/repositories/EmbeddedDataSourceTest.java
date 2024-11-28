@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class EmbeddedDataSourceTest {
     private EmbeddedDatabase db;
+
     @BeforeEach
     void init() {
         db = new EmbeddedDatabaseBuilder()
