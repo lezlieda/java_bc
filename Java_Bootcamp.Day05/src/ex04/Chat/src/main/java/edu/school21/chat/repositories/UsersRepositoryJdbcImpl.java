@@ -12,16 +12,16 @@ import java.util.List;
 import java.sql.ResultSet;
 
 public class UsersRepositoryJdbcImpl implements UsersRepository {
-    private DataSource dataSource;
+    private final DataSource dataSource;
     private final String SQL_FIND_ALL = "WITH t1 AS (SELECT u.id,\n" +
             "                   u.login,\n" +
             "                   u.password,\n" +
             "                   array_agg(DISTINCT c.id)   AS created_id,\n" +
             "                   array_agg(DISTINCT c.name) AS created_name,\n" +
             "                   array_agg(DISTINCT m.room) AS participant_id\n" +
-            "            FROM users u\n" +
-            "                     LEFT JOIN chatrooms c ON c.owner = u.id\n" +
-            "                     LEFT JOIN messages m ON m.author = u.id\n" +
+            "            FROM day05.users u\n" +
+            "                     LEFT JOIN day05.chatrooms c ON c.owner = u.id\n" +
+            "                     LEFT JOIN day05.messages m ON m.author = u.id\n" +
             "            GROUP BY 1)\n" +
             "SELECT t1.id,\n" +
             "       t1.login,\n" +
@@ -31,7 +31,7 @@ public class UsersRepositoryJdbcImpl implements UsersRepository {
             "       array_agg(DISTINCT c.id)   AS participant_id,\n" +
             "       array_agg(DISTINCT c.name) AS participant_name\n" +
             "FROM t1\n" +
-            "         LEFT JOIN chatrooms c ON c.id = ANY (t1.participant_id)\n" +
+            "         LEFT JOIN day05.chatrooms c ON c.id = ANY (t1.participant_id)\n" +
             "GROUP BY 1, 2, 3, 4, 5;";
 
     public UsersRepositoryJdbcImpl(DataSource dataSource) {

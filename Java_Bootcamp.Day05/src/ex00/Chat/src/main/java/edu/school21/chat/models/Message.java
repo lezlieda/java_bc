@@ -63,7 +63,7 @@ public class Message {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Message message = (Message) o;
-        return getId() == message.getId() && getAuthor().equals(message.getAuthor()) && getRoom().equals(message.getRoom()) && getText().equals(message.getText()) && getDateTime().equals(message.getDateTime());
+        return Objects.equals(getId(), message.getId()) && getAuthor().equals(message.getAuthor()) && getRoom().equals(message.getRoom()) && getText().equals(message.getText()) && getDateTime().equals(message.getDateTime());
     }
 
     @Override

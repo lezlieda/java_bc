@@ -8,7 +8,7 @@ import edu.school21.chat.repositories.UsersRepositoryJdbcImpl;
 public class Program {
     public static void main(String[] args) {
         UsersRepository usersRepository = new UsersRepositoryJdbcImpl(getDataSource());
-        usersRepository.findAll(2,2).forEach(System.out::println);
+        usersRepository.findAll(1, 2).forEach(System.out::println);
 
     }
 

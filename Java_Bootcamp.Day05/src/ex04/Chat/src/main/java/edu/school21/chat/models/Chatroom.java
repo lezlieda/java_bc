@@ -11,6 +11,7 @@ public class Chatroom {
 
     public Chatroom() {
     }
+
     public Chatroom(Long id, String name, User owner, List<Message> messages) {
         this.id = id;
         this.name = name;

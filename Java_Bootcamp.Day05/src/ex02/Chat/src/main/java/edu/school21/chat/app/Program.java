@@ -15,9 +15,8 @@ public class Program {
     public static void main(String[] args) {
         HikariDataSource dataSource = getDataSource();
         User creator = new User(1L, "user1", "password1", new ArrayList<>(), new ArrayList<>());
-        User author = creator;
         Chatroom chatroom = new Chatroom(3L, "chatroom3", creator, new ArrayList<>());
-        Message message = new Message(null, author, chatroom, "wuzzzuuuuup!", LocalDateTime.now());
+        Message message = new Message(null, creator, chatroom, "wuzzzuuuuup!", LocalDateTime.now());
         MessagesRepository messagesRepository = new MessagesRepositoryJdbcImpl(dataSource);
 
         System.out.println("\t--==ADD A MESSAGE==--");

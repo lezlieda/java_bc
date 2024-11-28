@@ -16,11 +16,11 @@ import java.util.Optional;
 
 public class MessagesRepositoryJdbcImpl implements MessagesRepository {
     private final DataSource dataSource;
-    private final String SQL_FIND_MESSAGE_BY_ID = "SELECT * FROM messages WHERE id = ?";
-    private final String SQL_FIND_USER_BY_ID = "SELECT * FROM users WHERE id = ?";
-    private final String SQL_FIND_CHATROOM_BY_ID = "SELECT * FROM chatrooms WHERE id = ?";
-    private final String SQL_INSERT_INTO_MESSAGES = "INSERT INTO messages  (author, room, \"text\", date_time) VALUES (?, ?, ?, ?)";
-    private final String SQL_GET_LAST_MESSAGE_ID = "SELECT MAX(id) FROM messages";
+    private final String SQL_FIND_MESSAGE_BY_ID = "SELECT * FROM day05.messages WHERE id = ?";
+    private final String SQL_FIND_USER_BY_ID = "SELECT * FROM day05.users WHERE id = ?";
+    private final String SQL_FIND_CHATROOM_BY_ID = "SELECT * FROM day05.chatrooms WHERE id = ?";
+    private final String SQL_INSERT_INTO_MESSAGES = "INSERT INTO day05.messages  (author, room, \"text\", date_time) VALUES (?, ?, ?, ?)";
+    private final String SQL_GET_LAST_MESSAGE_ID = "SELECT MAX(id) FROM day05.messages";
 
     public MessagesRepositoryJdbcImpl(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -44,6 +44,7 @@ public class MessagesRepositoryJdbcImpl implements MessagesRepository {
         }
         return Optional.empty();
     }
+
     @Contract("_ -> new")
     private @NotNull User findUserById(Long id) throws SQLException {
         Connection connection = dataSource.getConnection();
@@ -102,6 +103,7 @@ public class MessagesRepositoryJdbcImpl implements MessagesRepository {
             resultSet = preparedStatement.executeQuery();
             if (!resultSet.next()) throw new NotSavedSubEntityException("No such chatroom");
         } catch (SQLException e) {
+            throw new NotSavedSubEntityException(e.getMessage());
         }
     }
 }

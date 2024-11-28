@@ -12,6 +12,7 @@ public class User {
 
     public User() {
     }
+
     public User(Long id, String login, String password, List<Chatroom> createdRooms, List<Chatroom> rooms) {
         this.id = id;
         this.login = login;
@@ -65,7 +66,7 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return getId() == user.getId() && getLogin().equals(user.getLogin()) && getPassword().equals(user.getPassword()) && Objects.equals(getCreatedRooms(), user.getCreatedRooms()) && Objects.equals(getRooms(), user.getRooms());
+        return Objects.equals(getId(), user.getId()) && getLogin().equals(user.getLogin()) && getPassword().equals(user.getPassword()) && Objects.equals(getCreatedRooms(), user.getCreatedRooms()) && Objects.equals(getRooms(), user.getRooms());
     }
 
     @Override

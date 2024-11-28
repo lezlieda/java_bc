@@ -15,9 +15,9 @@ import java.util.Optional;
 
 public class MessagesRepositoryJdbcImpl implements MessagesRepository {
     private final DataSource dataSource;
-    private final String SQL_FIND_MESSAGE_BY_ID = "SELECT * FROM messages WHERE id = ?";
-    private final String SQL_FIND_USER_BY_ID = "SELECT * FROM users WHERE id = ?";
-    private final String SQL_FIND_CHATROOM_BY_ID = "SELECT * FROM chatrooms WHERE id = ?";
+    private final String SQL_FIND_MESSAGE_BY_ID = "SELECT * FROM day05.messages WHERE id = ?";
+    private final String SQL_FIND_USER_BY_ID = "SELECT * FROM day05.users WHERE id = ?";
+    private final String SQL_FIND_CHATROOM_BY_ID = "SELECT * FROM day05.chatrooms WHERE id = ?";
 
     public MessagesRepositoryJdbcImpl(DataSource dataSource) {
         this.dataSource = dataSource;
