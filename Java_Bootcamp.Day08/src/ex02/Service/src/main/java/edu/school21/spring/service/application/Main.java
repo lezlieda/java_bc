@@ -13,6 +13,10 @@ public class Main {
         UsersRepository usersRepositoryJdbc = context.getBean("usersRepositoryJdbc", UsersRepositoryJdbcImpl.class);
         System.out.println("UsersRepositoryJdbcImpl (uses standard Statements mechanisms):");
         System.out.println(usersRepositoryJdbc.findAll());
+        System.out.println("UsersRepositoryJdbcImpl (uses JDBC Template mechanisms):");
+        UsersRepository usersRepositoryJdbcTemplate = context.getBean("usersRepositoryJdbcTemplate", UsersRepositoryJdbcTemplateImpl.class);
+        System.out.println(usersRepositoryJdbcTemplate.findAll());
+
 
     }
 }

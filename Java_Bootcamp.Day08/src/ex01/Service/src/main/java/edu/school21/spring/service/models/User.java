@@ -8,6 +8,7 @@ public class User {
 
     public User() {
     }
+
     public User(Long id, String email) {
         this.id = id;
         this.email = email;

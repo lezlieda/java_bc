@@ -9,6 +9,7 @@ public class UsersServiceImpl implements UsersService {
     public UsersServiceImpl(UsersRepository usersRepository) {
         this.usersRepository = usersRepository;
     }
+
     @Override
     public String signUp(String email) {
         if (usersRepository.findByEmail(email).isPresent()) {

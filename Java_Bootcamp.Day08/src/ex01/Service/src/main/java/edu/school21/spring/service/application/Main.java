@@ -24,6 +24,5 @@ public class Main {
         System.out.println("usersRepositoryJdbcTemplateHikari (based on JdbcTemplate/NamedParameterJdbcTemplate):");
         UsersRepositoryJdbcTemplateImpl usersRepositoryJdbcTemplateHikari = context.getBean("usersRepositoryJdbcTemplateHikari", UsersRepositoryJdbcTemplateImpl.class);
         System.out.println(usersRepositoryJdbcTemplateHikari.findAll());
-
     }
 }

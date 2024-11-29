@@ -19,12 +19,12 @@ public class UsersRepositoryJdbcImpl implements UsersRepository {
     @Autowired
     @Qualifier("driverManagerDataSource")
     private final DataSource dataSource;
-    private final String SQL_FIND_BY_ID = "SELECT * FROM users WHERE id = ?";
-    private final String SQL_FIND_BY_EMAIL = "SELECT * FROM users WHERE email = ?";
-    private final String SQL_FIND_ALL = "SELECT * FROM users";
-    private final String SQL_SAVE = "INSERT INTO users (id, email, password) VALUES (?, ?, ?)";
-    private final String SQL_UPDATE = "UPDATE users SET email = ?, password = ? WHERE id = ?";
-    private final String SQL_DELETE = "DELETE FROM users WHERE id = ?";
+    private final String SQL_FIND_BY_ID = "SELECT * FROM day08.users WHERE id = ?";
+    private final String SQL_FIND_BY_EMAIL = "SELECT * FROM day08.users WHERE email = ?";
+    private final String SQL_FIND_ALL = "SELECT * FROM day08.users";
+    private final String SQL_SAVE = "INSERT INTO day08.users (id, email, password) VALUES (?, ?, ?)";
+    private final String SQL_UPDATE = "UPDATE day08.users SET email = ?, password = ? WHERE id = ?";
+    private final String SQL_DELETE = "DELETE FROM day08.users WHERE id = ?";
 
     @Autowired
     public UsersRepositoryJdbcImpl(@Qualifier("driverManagerDataSource") DataSource dataSource) {

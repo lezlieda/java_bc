@@ -7,10 +7,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,15 +14,15 @@ import java.util.Optional;
 @Qualifier("usersRepositoryJdbcTemplateImpl")
 public class UsersRepositoryJdbcTemplateImpl implements UsersRepository {
     JdbcTemplate jdbcTemplate;
-    private final String SQL_FIND_BY_ID = "SELECT * FROM users WHERE id = ?";
-    private final String SQL_FIND_BY_EMAIL = "SELECT * FROM users WHERE email = ?";
-    private final String SQL_FIND_ALL = "SELECT * FROM users";
-    private final String SQL_SAVE = "INSERT INTO users (id, email, password) VALUES (?, ?, ?)";
-    private final String SQL_UPDATE = "UPDATE users SET email = ?, password = ? WHERE id = ?";
-    private final String SQL_DELETE = "DELETE FROM users WHERE id = ?";
+    private final String SQL_FIND_BY_ID = "SELECT * FROM day08.users WHERE id = ?";
+    private final String SQL_FIND_BY_EMAIL = "SELECT * FROM day08.users WHERE email = ?";
+    private final String SQL_FIND_ALL = "SELECT * FROM day08.users";
+    private final String SQL_SAVE = "INSERT INTO day08.users (id, email, password) VALUES (?, ?, ?)";
+    private final String SQL_UPDATE = "UPDATE day08.users SET email = ?, password = ? WHERE id = ?";
+    private final String SQL_DELETE = "DELETE FROM day08.users WHERE id = ?";
 
-
-    public UsersRepositoryJdbcTemplateImpl(DataSource dataSource) {
+    @Autowired
+    public UsersRepositoryJdbcTemplateImpl(@Qualifier("driverManagerDataSource")DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
@@ -40,9 +36,7 @@ public class UsersRepositoryJdbcTemplateImpl implements UsersRepository {
 
     @Override
     public List<User> findAll() {
-        return jdbcTemplate.query(SQL_FIND_ALL, (resultSet, i) -> {
-            return new User(resultSet.getLong("id"), resultSet.getString("email"), resultSet.getString("password"));
-        });
+        return jdbcTemplate.query(SQL_FIND_ALL, (resultSet, i) -> new User(resultSet.getLong("id"), resultSet.getString("email"), resultSet.getString("password")));
     }
 
     @Override
