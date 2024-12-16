@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 @Qualifier("server")
 public class Server {
     private static final SocketLogger logger = SocketLogger.getInstance();
+
     public void run(int port) {
         logger.info("Starting server on port {}", port);
         EventLoopGroup bossGroup = new NioEventLoopGroup();

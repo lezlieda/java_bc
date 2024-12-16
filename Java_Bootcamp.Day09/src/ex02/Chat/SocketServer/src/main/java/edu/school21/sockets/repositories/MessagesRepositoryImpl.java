@@ -3,6 +3,7 @@ package edu.school21.sockets.repositories;
 import edu.school21.sockets.models.Chatroom;
 import edu.school21.sockets.models.Message;
 import edu.school21.sockets.models.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
-@Qualifier("messagesRepositoryImpl")
+@Qualifier("messagesRepository")
 public class MessagesRepositoryImpl implements MessagesRepository {
     JdbcTemplate jdbcTemplate;
     private final String SQL_FIND_BY_ID = "WITH t1 AS (SELECT m.id,\n" +
@@ -44,7 +45,8 @@ public class MessagesRepositoryImpl implements MessagesRepository {
     private final String SQL_DELETE = "DELETE FROM \"messages\" WHERE id =?";
     private final String SQL_LAST_30_MESSAGES = "SELECT m.id, m.message, m.user_id, u.username, m.created_at FROM \"messages\" m JOIN \"users\" u ON m.user_id = u.id WHERE chatroom_id = ? ORDER BY created_at DESC LIMIT 30";
 
-    public MessagesRepositoryImpl(DataSource dataSource) {
+    @Autowired
+    public MessagesRepositoryImpl(@Qualifier("dataSource") DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 

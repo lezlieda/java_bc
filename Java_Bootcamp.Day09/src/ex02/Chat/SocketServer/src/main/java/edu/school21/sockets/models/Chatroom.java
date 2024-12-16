@@ -11,6 +11,7 @@ public class Chatroom {
 
     public Chatroom() {
     }
+
     public Chatroom(Long id, String name, User owner, List<Message> messages) {
         this.id = id;
         this.name = name;
@@ -54,8 +55,13 @@ public class Chatroom {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         Chatroom chatroom = (Chatroom) o;
-        return getId().equals(chatroom.getId()) && getName().equals(chatroom.getName()) && getOwner().equals(chatroom.getOwner()) && getMessages().equals(chatroom.getMessages());
+
+        if (!getId().equals(chatroom.getId())) return false;
+        if (getName() != null ? !getName().equals(chatroom.getName()) : chatroom.getName() != null) return false;
+        if (getOwner() != null ? !getOwner().equals(chatroom.getOwner()) : chatroom.getOwner() != null) return false;
+        return getMessages() != null ? getMessages().equals(chatroom.getMessages()) : chatroom.getMessages() == null;
     }
 
     @Override

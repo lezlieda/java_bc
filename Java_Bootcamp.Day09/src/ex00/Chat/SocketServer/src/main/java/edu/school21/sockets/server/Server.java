@@ -16,7 +16,6 @@ import java.net.Socket;
 public class Server {
     private final UsersService usersService;
 
-
     @Autowired
     public Server(@Qualifier("usersService") UsersService usersService) {
         this.usersService = usersService;

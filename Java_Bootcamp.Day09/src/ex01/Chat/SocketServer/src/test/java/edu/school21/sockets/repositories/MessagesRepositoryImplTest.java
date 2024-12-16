@@ -1,37 +1,28 @@
 package edu.school21.sockets.repositories;
 
+import edu.school21.sockets.config.TestApplicationConfig;
 import edu.school21.sockets.models.Message;
 import edu.school21.sockets.models.User;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+import javax.sql.DataSource;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class MessagesRepositoryImplTest {
-    private EmbeddedDatabase database;
     private MessagesRepository messagesRepository;
 
     @BeforeEach
     void setUp() {
-        database = new EmbeddedDatabaseBuilder()
-                .generateUniqueName(true)
-                .addScript("schema.sql")
-                .addScript("data.sql")
-                .build();
-        messagesRepository = new MessagesRepositoryImpl(database);
-    }
-
-    @AfterEach
-    void tearDown() {
-        database.shutdown();
+        ApplicationContext context = new AnnotationConfigApplicationContext(TestApplicationConfig.class);
+        messagesRepository = new MessagesRepositoryImpl(context.getBean("testDatabase", DataSource.class));
     }
 
     @ParameterizedTest(name = "findByIdSuccess")

@@ -1,6 +1,7 @@
 package edu.school21.sockets.repositories;
 
 import edu.school21.sockets.models.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -10,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
-@Qualifier("usersRepositoryImpl")
+@Qualifier("usersRepository")
 public class UsersRepositoryImpl implements UsersRepository {
     JdbcTemplate jdbcTemplate;
     private final String SQL_FIND_BY_ID = "SELECT * FROM \"users\" WHERE id = ?";
@@ -21,7 +22,8 @@ public class UsersRepositoryImpl implements UsersRepository {
     private final String SQL_DELETE = "DELETE FROM \"users\" WHERE id = ?";
     private final String SQL_MAX_ID = "SELECT MAX(id) FROM \"users\"";
 
-    public UsersRepositoryImpl(DataSource dataSource) {
+    @Autowired
+    public UsersRepositoryImpl(@Qualifier("dataSource") DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 

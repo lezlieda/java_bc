@@ -40,7 +40,7 @@ public class SignInHandler extends ChannelInboundHandlerAdapter {
                     logger.info("Client: " + incoming.remoteAddress() + " signed in successfully as " + user);
                     usersManager.logIn(incoming, user);
                     Long lastRoomId = chatroomsManager.lastRoomVisited(user);
-                    if (lastRoomId!= null) {
+                    if (lastRoomId != null) {
                         incoming.writeAndFlush("\t---\tLast 30 messages from the last visited room: " + chatroomsManager.getChatroomById(lastRoomId).getName() + "\t---\n");
                         for (Message message : messagesManager.getLast30Messages(lastRoomId)) {
                             incoming.writeAndFlush(message + "\n");

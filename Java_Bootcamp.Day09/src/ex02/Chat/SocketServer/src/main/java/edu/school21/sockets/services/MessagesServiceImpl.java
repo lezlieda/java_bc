@@ -10,11 +10,10 @@ import java.util.List;
 
 @Component("messagesService")
 public class MessagesServiceImpl implements MessagesService {
-    @Autowired
-    @Qualifier("messagesRepositoryImpl")
     private final MessagesRepository messagesRepository;
 
-    public MessagesServiceImpl(MessagesRepository messagesRepository) {
+    @Autowired
+    public MessagesServiceImpl(@Qualifier("messagesRepository") MessagesRepository messagesRepository) {
         this.messagesRepository = messagesRepository;
     }
 

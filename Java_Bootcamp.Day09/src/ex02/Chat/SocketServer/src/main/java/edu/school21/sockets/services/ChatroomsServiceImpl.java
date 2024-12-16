@@ -11,13 +11,13 @@ import java.util.List;
 
 @Component("chatroomsService")
 public class ChatroomsServiceImpl implements ChatroomsService {
-    @Autowired
-    @Qualifier("chatroomsRepositoryImpl")
     private final ChatroomsRepository chatroomsRepository;
 
-    public ChatroomsServiceImpl(ChatroomsRepository chatroomsRepository) {
+    @Autowired
+    public ChatroomsServiceImpl(@Qualifier("chatroomsRepository") ChatroomsRepository chatroomsRepository) {
         this.chatroomsRepository = chatroomsRepository;
     }
+
     @Override
     public boolean createChatroom(String name, User owner) {
         Chatroom chatroom = new Chatroom(null, name, owner, null);
@@ -37,7 +37,6 @@ public class ChatroomsServiceImpl implements ChatroomsService {
     @Override
     public String getChatroomList() {
         StringBuilder sb = new StringBuilder();
-//        int count = 1;
         for (Chatroom chatroom : chatroomsRepository.findAll()) {
             sb.append(chatroom.getId()).append(". ").append(chatroom.getName()).append("\n");
         }

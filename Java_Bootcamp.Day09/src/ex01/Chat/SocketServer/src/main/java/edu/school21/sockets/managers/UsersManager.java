@@ -57,12 +57,9 @@ public class UsersManager {
         return loggedInUsers.get(channel);
     }
 
-    public ChannelGroup getRecipients(Channel sender) {
+    public ChannelGroup getRecipients() {
         ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-        loggedInUsers.forEach((channel, user) -> {
-//            if (!sender.equals(channel))
-                channels.add(channel);
-        });
+        loggedInUsers.forEach((channel, user) -> channels.add(channel));
         return channels;
     }
 

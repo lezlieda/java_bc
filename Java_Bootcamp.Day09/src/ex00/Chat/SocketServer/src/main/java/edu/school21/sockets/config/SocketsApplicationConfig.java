@@ -1,8 +1,6 @@
 package edu.school21.sockets.config;
 
 import com.zaxxer.hikari.HikariDataSource;
-import edu.school21.sockets.repositories.UsersRepository;
-import edu.school21.sockets.repositories.UsersRepositoryImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -23,7 +21,7 @@ public class SocketsApplicationConfig {
     @Value("${db.driver.name}")
     private String DB_DRIVER_NAME;
 
-    @Bean(name = "hikariDataSource")
+    @Bean
     public HikariDataSource dataSource() {
         HikariDataSource dataSource = new HikariDataSource();
         dataSource.setJdbcUrl(DB_URL);
@@ -31,11 +29,6 @@ public class SocketsApplicationConfig {
         dataSource.setPassword(DB_PASSWORD);
         dataSource.setDriverClassName(DB_DRIVER_NAME);
         return dataSource;
-    }
-
-    @Bean
-    public UsersRepository usersRepository() {
-        return new UsersRepositoryImpl(dataSource());
     }
 
     @Bean

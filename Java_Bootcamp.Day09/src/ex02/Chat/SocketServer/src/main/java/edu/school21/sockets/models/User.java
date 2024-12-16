@@ -44,8 +44,13 @@ public class User {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         User user = (User) o;
-        return Objects.equals(getId(), user.getId()) && Objects.equals(getUsername(), user.getUsername()) && Objects.equals(getPassword(), user.getPassword());
+
+        if (!getId().equals(user.getId())) return false;
+        if (getUsername() != null ? !getUsername().equals(user.getUsername()) : user.getUsername() != null)
+            return false;
+        return getPassword() != null ? getPassword().equals(user.getPassword()) : user.getPassword() == null;
     }
 
     @Override

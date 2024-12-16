@@ -1,55 +1,57 @@
 package edu.school21.sockets.services;
 
+import edu.school21.sockets.config.TestApplicationConfig;
+import edu.school21.sockets.models.Chatroom;
+import edu.school21.sockets.models.User;
 import edu.school21.sockets.repositories.ChatroomsRepositoryImpl;
-import edu.school21.sockets.repositories.MessagesRepositoryImpl;
-import edu.school21.sockets.repositories.UsersRepositoryImpl;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+import javax.sql.DataSource;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class ChatroomsServiceImplTest {
-    private EmbeddedDatabase db;
     private ChatroomsService chatroomsService;
 
     @BeforeEach
     void setUp() {
-        db = new EmbeddedDatabaseBuilder()
-                .generateUniqueName(true)
-                .setType(EmbeddedDatabaseType.HSQL)
-                .addScript("schema.sql")
-                .addScript("data.sql")
-                .build();
-        chatroomsService = new ChatroomsServiceImpl(new ChatroomsRepositoryImpl(db));
+        ApplicationContext context = new AnnotationConfigApplicationContext(TestApplicationConfig.class);
+        chatroomsService = new ChatroomsServiceImpl(new ChatroomsRepositoryImpl(context.getBean("testDatabase", DataSource.class)));
     }
 
     @Test
-    void checkConnection() {
-        try {
-            assertNotNull(db.getConnection());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    void createChatroomSuccess() {
+        User user = new User(0L, "admin", "admin");
+        assertTrue(chatroomsService.createChatroom("test", user));
     }
 
-    @AfterEach
-    void tearDown() {
-        db.shutdown();
-    }
+
     @Test
-    void createChatroom() {
+    void getChatroomByIdSuccess() {
+        Chatroom chatroom = new Chatroom(0L, "room1", new User(1L, "user", "user"), null);
+        assertEquals(chatroom, chatroomsService.getChatroomById(0L));
     }
 
     @Test
-    void getChatroomById() {
+    void getChatroomByIdFail() {
+        assertNull(chatroomsService.getChatroomById(100L));
     }
 
     @Test
-    void getAllChatrooms() {
-        System.out.println(chatroomsService.getChatroomList());
+    void getAllChatroomsWithMultipleRooms() {
+        List<Chatroom> chatrooms = chatroomsService.getAllChatrooms();
+        assertNotNull(chatrooms);
+        assertTrue(chatrooms.size() > 1);
+        assertEquals("room1", chatrooms.get(0).getName());
+        assertEquals("room2", chatrooms.get(1).getName());
+        assertEquals("user", chatrooms.get(0).getOwner().getUsername());
+        assertEquals("user", chatrooms.get(1).getOwner().getUsername());
     }
+
+
 }

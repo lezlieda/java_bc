@@ -2,6 +2,7 @@ package edu.school21.sockets.repositories;
 
 import edu.school21.sockets.models.Chatroom;
 import edu.school21.sockets.models.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
-@Qualifier("chatroomsRepositoryImpl")
+@Qualifier("chatroomsRepository")
 public class ChatroomsRepositoryImpl implements ChatroomsRepository {
     JdbcTemplate jdbcTemplate;
     private final String SQL_FIND_BY_ID = "SELECT c.id, c.name, u.id AS owner_id, u.username AS owner_username, u.password AS owner_password FROM \"chatrooms\" c JOIN \"users\" u ON c.owner = u.id WHERE c.id = ?";
@@ -21,7 +22,8 @@ public class ChatroomsRepositoryImpl implements ChatroomsRepository {
     private final String SQL_UPDATE = "UPDATE \"chatrooms\" SET name =?, owner =? WHERE id =?";
     private final String SQL_DELETE = "DELETE FROM \"chatrooms\" WHERE id =?";
 
-    public ChatroomsRepositoryImpl(DataSource dataSource) {
+    @Autowired
+    public ChatroomsRepositoryImpl(@Qualifier("dataSource") DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
@@ -46,8 +48,7 @@ public class ChatroomsRepositoryImpl implements ChatroomsRepository {
             Long chatroomId = resultSet.getLong("id");
             String name = resultSet.getString("name");
             User owner = new User(resultSet.getLong("owner_id"), resultSet.getString("owner_username"), resultSet.getString("owner_password"));
-            Chatroom res = new Chatroom(chatroomId, name, owner, null);
-            return res;
+            return new Chatroom(chatroomId, name, owner, null);
         });
     }
 

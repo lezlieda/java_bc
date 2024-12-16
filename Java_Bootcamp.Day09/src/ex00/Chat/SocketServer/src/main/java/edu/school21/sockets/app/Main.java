@@ -17,6 +17,5 @@ public class Main {
         ApplicationContext context = new AnnotationConfigApplicationContext(SocketsApplicationConfig.class);
         Server server = context.getBean("server", Server.class);
         server.start(arguments.getPort());
-
     }
 }

@@ -1,46 +1,29 @@
 package edu.school21.sockets.repositories;
 
+import edu.school21.sockets.config.TestApplicationConfig;
 import edu.school21.sockets.models.Chatroom;
 import edu.school21.sockets.models.User;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+import javax.sql.DataSource;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class ChatroomsRepositoryImplTest {
     private ChatroomsRepository chatroomsRepository;
-    private EmbeddedDatabase database;
+    private UsersRepository usersRepository;
 
     @BeforeEach
     void setUp() {
-        database = new EmbeddedDatabaseBuilder()
-                .generateUniqueName(true)
-                .addScript("schema.sql")
-                .addScript("data.sql")
-                .build();
-        chatroomsRepository = new ChatroomsRepositoryImpl(database);
-    }
-
-    @AfterEach
-    void tearDown() {
-        database.shutdown();
-    }
-
-    @Test
-    void checkConnection() {
-        try {
-            assertNotNull(database.getConnection());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        ApplicationContext context = new AnnotationConfigApplicationContext(TestApplicationConfig.class);
+        chatroomsRepository = new ChatroomsRepositoryImpl(context.getBean("testDatabase", DataSource.class));
+        usersRepository = new UsersRepositoryImpl(context.getBean("testDatabase", DataSource.class));
     }
 
     @ParameterizedTest
@@ -69,7 +52,6 @@ class ChatroomsRepositoryImplTest {
 
     @Test
     void save() {
-        UsersRepository usersRepository = new UsersRepositoryImpl(database);
         User test = new User();
         test.setUsername("test");
         test.setPassword("test");

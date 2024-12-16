@@ -31,7 +31,7 @@ public class SocketsApplicationConfig {
     @Value("${db.driver.name}")
     private String DB_DRIVER_NAME;
 
-    @Bean(name = "hikariDataSource")
+    @Bean
     public HikariDataSource dataSource() {
         HikariDataSource dataSource = new HikariDataSource();
         dataSource.setJdbcUrl(DB_URL);
@@ -58,7 +58,7 @@ public class SocketsApplicationConfig {
 
     @Bean(name = "usersService")
     public UsersService usersService() {
-        return new UsersServiceImpl(usersRepository());
+        return new UsersServiceImpl(usersRepository(), bCryptPasswordEncoder());
     }
 
     @Bean(name = "messagesService")

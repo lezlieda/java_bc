@@ -6,5 +6,6 @@ import java.util.List;
 
 public interface MessagesService {
     boolean saveMessage(Message message);
+
     List<Message> getLast30Messages(Long chatroomId);
 }

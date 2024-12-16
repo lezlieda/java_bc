@@ -1,6 +1,7 @@
 package edu.school21.sockets.repositories;
 
 import edu.school21.sockets.models.Message;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
-@Qualifier("messagesRepositoryImpl")
+@Qualifier("messagesRepository")
 public class MessagesRepositoryImpl implements MessagesRepository {
     JdbcTemplate jdbcTemplate;
     private final String SQL_FIND_BY_ID = "SELECT * FROM \"messages\" WHERE id = ?";
@@ -22,7 +23,8 @@ public class MessagesRepositoryImpl implements MessagesRepository {
     private final String SQL_UPDATE = "UPDATE \"messages\" SET user_id =?, message =? WHERE id =?";
     private final String SQL_DELETE = "DELETE FROM \"messages\" WHERE id =?";
 
-    public MessagesRepositoryImpl(DataSource dataSource) {
+    @Autowired
+    public MessagesRepositoryImpl(@Qualifier("dataSource") DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 

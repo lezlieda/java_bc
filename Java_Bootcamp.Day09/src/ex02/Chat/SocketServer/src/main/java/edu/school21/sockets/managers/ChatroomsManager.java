@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Component("chatroomsManager" )
+@Component("chatroomsManager")
 public class ChatroomsManager {
     @Autowired
     private ChatroomsService chatroomsService;

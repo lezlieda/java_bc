@@ -26,7 +26,7 @@ public class MessagingHandler extends ChannelInboundHandlerAdapter {
         } else {
             logger.info("Client " + incoming.remoteAddress() + " sent: " + msg);
             String message = usersManager.getUsername(incoming) + ": " + msg + "\n";
-            for (Channel c : usersManager.getRecipients(incoming)) {
+            for (Channel c : usersManager.getRecipients()) {
                 c.writeAndFlush(message);
             }
             messagesManager.sendMessage(new Message(usersManager.getUser(incoming), msg.toString()));
